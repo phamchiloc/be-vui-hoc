@@ -42,6 +42,13 @@ const U = (() => {
     if (n > (store.stars[id] || 0)) { store.stars[id] = n; save(); }
     updateStarTotal();
   }
+  /* Xoá sao của những bài không còn trong chương trình. */
+  function dropStars(test) {
+    const s = store.stars || {};
+    const keys = Object.keys(s).filter(test);
+    keys.forEach((k) => delete s[k]);
+    if (keys.length) save();
+  }
   const totalStars = (prefix = '') =>
     Object.entries(store.stars || {}).filter(([k]) => k.startsWith(prefix)).reduce((s, [, v]) => s + v, 0);
   function updateStarTotal() {
@@ -164,7 +171,7 @@ const U = (() => {
 
   return {
     rand, pick, shuffle, esc, el, fmt,
-    get, set, getStars, setStars, totalStars, updateStarTotal, starsHtml,
+    get, set, getStars, setStars, dropStars, totalStars, updateStarTotal, starsHtml,
     sound, speak, stopSpeak, toast, confetti,
   };
 })();

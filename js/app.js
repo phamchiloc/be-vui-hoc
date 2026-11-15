@@ -12,23 +12,23 @@
     { n: 5, icon: '🦉', color: '#9775fa' },
   ];
   const SUBJECTS = [
-    { id: 'tapviet', name: 'Tập viết', icon: '✏️', desc: 'Tô chữ theo mẫu trên vở ô li', color: '#ff7aa2', prefix: 'tv' },
+    { id: 'tapviet', name: 'Tập viết', icon: '✏️', desc: 'Chép đoạn văn, có hướng dẫn gõ dấu', color: '#ff7aa2', prefix: 'tv' },
     { id: 'toan', name: 'Toán', icon: '🔢', desc: 'Đếm, tính toán, hình học', color: '#3a86ff', prefix: 'toan' },
     { id: 'tienganh', name: 'Tiếng Anh', icon: '🔤', desc: 'Từ vựng có hình và giọng đọc', color: '#2ec4b6', prefix: 'ta' },
   ];
-  const lessonCount = (g, id) => ({ tapviet: TV_DATA[g], toan: Toan.topics[g], tienganh: TA_DATA[g] }[id].length);
+  const lessonCount = (g, id) => ({ tapviet: DOANVAN_DATA[g], toan: Toan.topics[g], tienganh: TA_DATA[g] }[id].length);
   const gradeStars = (g) => SUBJECTS.reduce((s, x) => s + U.totalStars(`${x.prefix}/${g}/`), 0);
 
   let cleanup = null;
   const parse = () => location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   const go = (parts) => { location.hash = `#/${parts.join('/')}`; };
 
-  /* Lùi một cấp. Riêng Tập viết: từ màn luyện chữ về thẳng danh sách bài. */
+  /* Lùi một cấp. Riêng Tập viết (vào thẳng bài chép văn) thì về màn chọn môn. */
   function up() {
     const p = parse();
     if (!p.length) return;
+    if (p[2] === 'tapviet') { go(['lop', p[1]]); return; }
     p.pop();
-    if (p[2] === 'tapviet' && p.length === 4) p.length = 3;
     if (p.length === 1) p.length = 0;
     go(p);
   }
@@ -94,10 +94,8 @@
     const base = [['🏠 Trang chủ', '#/'], [`Lớp ${g}`, `#/lop/${g}`], [`${subj.icon} ${subj.name}`, `#/lop/${g}/${subj.id}`]];
 
     if (subj.id === 'tapviet') {
-      const lesson = TV_DATA[g].find((l) => l.id === p[3]);
-      if (!lesson) return TapViet.list(frame(base, `✏️ Tập viết – Lớp ${g}`), g);
-      const idx = Math.min(Math.max(0, parseInt(p[4], 10) || 0), lesson.items.length - 1);
-      cleanup = TapViet.practice(frame([...base, [lesson.name]]), g, lesson, idx);
+      const idx = Math.min(Math.max(0, parseInt(p[3], 10) || 0), DOANVAN_DATA[g].length - 1);
+      cleanup = ChepVan.practice(frame([...base.slice(0, 2), ['✏️ Tập viết – Chép đoạn văn']]), g, idx);
       return;
     }
 
@@ -130,6 +128,7 @@
   const paintSound = () => { btnSound.textContent = U.get('sound', true) ? '🔊' : '🔇'; };
   btnSound.onclick = () => { U.set('sound', !U.get('sound', true)); paintSound(); };
   btnBack.onclick = up;
+  U.dropStars((k) => k.startsWith('tv/') && !k.includes('/chepvan/')); // sao của phần tô chữ cũ đã bỏ
   window.addEventListener('hashchange', render);
   paintSound();
   render();
