@@ -1,4 +1,5 @@
-/* Điều hướng giữa các màn hình theo địa chỉ dạng #/lop/<lớp>/<môn>/<bài>/... */
+/* Điều hướng giữa các màn hình theo địa chỉ dạng #/lop/<lớp>/<môn>/<bài>/...
+   Bài học cô Lan có địa chỉ riêng #/colan/<bé>/<tuần>/..., xem js/colan.js. */
 (() => {
   const app = document.getElementById('app');
   const btnBack = document.getElementById('btnBack');
@@ -29,7 +30,7 @@
     if (!p.length) return;
     if (p[2] === 'tapviet') { go(['lop', p[1]]); return; }
     p.pop();
-    if (p.length === 1) p.length = 0;
+    if (p.length === 1 && p[0] === 'lop') p.length = 0;
     go(p);
   }
 
@@ -53,7 +54,13 @@
           <div class="big">${g.icon}</div>
           <div class="title">Lớp ${g.n}</div>
           <div class="sub">⭐ ${gradeStars(g.n)} sao</div>
-        </a>`).join('')}</div>`;
+        </a>`).join('')}
+        <a class="card colan" href="#/colan" style="--c:#e64980">
+          <div class="big">👩‍🏫</div>
+          <div class="title">Bài học cô Lan</div>
+          <div class="sub">${COLAN_DATA.students.map((s) => s.name).join(' · ')}</div>
+          <div class="sub">⭐ ${U.totalStars('colan/')} sao</div>
+        </a></div>`;
   }
 
   function gradeScreen(g) {
@@ -85,6 +92,7 @@
 
     const p = parse();
     btnBack.style.visibility = p.length ? 'visible' : 'hidden';
+    if (p[0] === 'colan') { cleanup = CoLan.render(p.slice(1), { frame, go }) || null; return; }
     const g = +p[1];
     if (p[0] !== 'lop' || !GRADES.some((x) => x.n === g)) return home();
     if (!p[2]) return gradeScreen(g);

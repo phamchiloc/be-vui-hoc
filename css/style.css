@@ -368,6 +368,62 @@ kbd.punct { background: #e6fcf5; border-color: #38d9a9; }
 .tile.used { visibility: hidden; }
 .spell-ctrl { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
 
+/* ---------- Bài học cô Lan ---------- */
+.grades .card.colan .title { font-size: 25px; }
+.svg-pic { display: inline-flex; line-height: 1; vertical-align: middle; }
+.svg-pic svg { display: block; }
+.choices.textpics .svg-pic { font-size: 42px; }
+.choices.pictures.big .choice { min-height: 170px; font-size: 120px; }
+.flip { display: inline-block; transform: scaleX(-1); }
+.scene { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 18px; font-size: 96px; line-height: 1.1; }
+.bubble { padding: 0.08em 0.14em; font-size: 0.72em; background: #fff3bf; border-radius: 0.35em; }
+.cd { position: relative; display: inline-flex; padding: 0.08em 0.12em; font-size: 0.72em; border: 5px solid; border-radius: 22px; }
+.cd.yes { background: #e6fcf5; border-color: var(--green); }
+.cd.no { background: #fff0f3; border-color: var(--red); }
+.cd b {
+  position: absolute; right: -14px; bottom: -14px;
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px;
+  font-size: 22px; color: #fff;
+  border-radius: 50%;
+}
+.cd.yes b { background: var(--green); }
+.cd.no b { background: var(--red); }
+.cl-count { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 10px; max-width: 460px; font-size: 76px; line-height: 1.15; }
+.cl-intro { margin: -8px 0 18px; font-size: 18px; font-weight: 700; color: var(--muted); }
+.cl-topic { font-size: 16px; font-weight: 800; color: var(--c); }
+.cl-report { padding: 18px 24px; background: #fff; border-radius: 24px; box-shadow: var(--shadow); }
+.cl-rhead {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px;
+  padding-bottom: 12px;
+  font-weight: 800; color: var(--muted);
+  border-bottom: 4px solid var(--c);
+}
+.cl-rhead b { font-size: 22px; color: var(--ink); }
+.cl-good { padding: 2px 12px; color: #fff; background: var(--green); border-radius: 999px; }
+.cl-report dl { margin: 0; }
+.cl-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 12px 0; border-bottom: 2px dashed var(--line); }
+.cl-row:last-child { border-bottom: 0; padding-bottom: 2px; }
+.cl-row dt { font-weight: 900; }
+.cl-row dd { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.6; }
+.cl-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.cl-chip { padding: 2px 10px; font: inherit; font-size: 16px; font-weight: 800; color: var(--ink); background: #f1f3ff; border: 0; border-radius: 10px; }
+button.cl-chip { cursor: pointer; }
+button.cl-chip:hover { background: #e4e8ff; }
+.cl-lines { margin: 0; padding-left: 20px; }
+.cl-sum { display: flex; flex-direction: column; gap: 12px; }
+.cl-sum-row {
+  display: grid; grid-template-columns: 130px 1fr; gap: 14px;
+  padding: 14px 18px;
+  background: #fff;
+  border-left: 8px solid var(--c); border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+.cl-sum-week b { display: block; font-size: 22px; font-weight: 900; }
+.cl-sum-week small { font-size: 14px; font-weight: 700; color: var(--muted); }
+.cl-sum-topic { margin-bottom: 8px; font-size: 18px; font-weight: 900; }
+.cl-sum-hw { margin-top: 8px; font-size: 15px; font-weight: 700; color: var(--muted); }
+
 .crash { max-width: 520px; margin: 40px auto; padding: 28px; text-align: center; font-size: 20px; font-weight: 700; background: #fff; border-radius: 24px; box-shadow: var(--shadow); }
 .crash .big { font-size: 72px; }
 
@@ -418,4 +474,10 @@ kbd.punct { background: #e6fcf5; border-color: #38d9a9; }
   .cv-text { padding: 14px 16px; font-size: 21px; }
   .cv-input { font-size: 21px; }
   .cv-target b { font-size: 26px; }
+  .grades .card.colan .title { font-size: 18px; }
+  .choices.pictures.big .choice { min-height: 130px; font-size: 90px; }
+  .scene { font-size: 70px; }
+  .cl-count { font-size: 54px; }
+  .cl-report { padding: 14px 16px; }
+  .cl-row, .cl-sum-row { grid-template-columns: 1fr; gap: 4px; }
 }

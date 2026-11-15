@@ -11,7 +11,12 @@ const TiengAnh = (() => {
   ];
   let keyHandler = null;
 
+  /* g là số lớp, hoặc { href, key, level } khi dùng cho bài học riêng (xem js/colan.js):
+     href là địa chỉ chứa các chủ đề, key là tiền tố lưu sao, level quyết định độ khó của Ghép chữ. */
+  const ctx = (g) => (typeof g === 'object' ? g : { href: `#/lop/${g}/tienganh`, key: `ta/${g}`, level: g });
+
   const pic = (it) => {
+    if (it.svg) return `<span class="svg-pic">${it.svg}</span>`;
     if (it.color) return `<span class="color-dot" style="background:${it.color}"></span>`;
     if (it.badge) return `<span class="badge-img">${esc(it.badge)}</span>`;
     return `<span class="emo">${it.img}</span>`;
@@ -20,9 +25,9 @@ const TiengAnh = (() => {
   const spellItems = (topic) => (topic.phrases ? [] : topic.items.filter((it) => letterCount(it.en) <= 10));
   const modesFor = (topic) => MODES.filter((m) => m.id !== 'spell' || spellItems(topic).length >= 4);
   const modeText = (topic, m) => (topic.phrases && m.pName ? [m.pName, m.pDesc] : [m.name, m.desc]);
-  const sid = (g, topic, mode) => `ta/${g}/${topic.id}/${mode}`;
+  const sid = (g, topic, mode) => `${ctx(g).key}/${topic.id}/${mode}`;
   const topicStars = (g, topic) => modesFor(topic).reduce((s, m) => s + U.getStars(sid(g, topic, m.id)), 0);
-  const sayItem = (it, slow) => U.speak(it.letter ? `${it.letter}. ${it.en}` : it.en, 'en', slow ? 0.5 : 0.85);
+  const sayItem = (it, slow) => U.speak(it.letter ? `${it.letter}. ${it.en}` : it.say || it.en, 'en', slow ? 0.5 : 0.85);
 
   function setKeys(fn) {
     if (keyHandler) document.removeEventListener('keydown', keyHandler);
@@ -33,7 +38,7 @@ const TiengAnh = (() => {
   /* ---------- Danh sách chủ đề và màn hình chủ đề ---------- */
   function list(root, g) {
     root.innerHTML = `<div class="grid">${TA_DATA[g].map((t) => `
-      <a class="card" href="#/lop/${g}/tienganh/${t.id}" style="--c:#2ec4b6">
+      <a class="card" href="${ctx(g).href}/${t.id}" style="--c:#2ec4b6">
         <div class="big">${t.icon}</div>
         <div class="title">${esc(t.name)}</div>
         <div class="sub">${esc(t.vi)} · ${t.items.length} ${t.phrases ? 'câu' : 'từ'}</div>
@@ -45,7 +50,7 @@ const TiengAnh = (() => {
     root.innerHTML = `
       <div class="grid modes">${modesFor(topic).map((m) => {
         const [name, desc] = modeText(topic, m);
-        return `<a class="card" href="#/lop/${g}/tienganh/${topic.id}/${m.id}" style="--c:${m.color}">
+        return `<a class="card" href="${ctx(g).href}/${topic.id}/${m.id}" style="--c:${m.color}">
           <div class="big">${m.icon}</div><div class="title">${name}</div><div class="sub">${desc}</div>
           <div class="stars">${U.starsHtml(U.getStars(sid(g, topic, m.id)))}</div></a>`;
       }).join('')}</div>
@@ -122,6 +127,7 @@ const TiengAnh = (() => {
   /* ---------- Nghe và chọn / Nhìn và chọn ---------- */
   function quiz(root, g, topic, mode, onExit) {
     const items = topic.items;
+    const sayOf = (en) => { const x = items.find((i) => i.en === en); return x ? x.say || x.en : en; };
     const [name] = modeText(topic, MODES.find((m) => m.id === mode));
     return Quiz.run({
       container: root,
@@ -129,11 +135,11 @@ const TiengAnh = (() => {
       lessonId: sid(g, topic, mode),
       total: Math.min(10, items.length),
       onExit,
-      onAnswer: (q) => setTimeout(() => U.speak(q.answer, 'en'), 250),
+      onAnswer: (q) => setTimeout(() => U.speak(sayOf(q.answer), 'en'), 250),
       makeQuestion() {
         const it = U.pick(items);
         const opts = U.shuffle([it, ...U.shuffle(items.filter((x) => x !== it)).slice(0, 3)]);
-        const speak = { text: it.en, lang: 'en' };
+        const speak = { text: it.say || it.en, lang: 'en' };
         if (mode === 'listen') {
           const visual = '<button class="speak speak-big" title="Nghe lại">🔊</button>';
           if (topic.phrases) {
@@ -182,7 +188,7 @@ const TiengAnh = (() => {
       const target = slotIdx.map((j) => chars[j].toLowerCase());
       let tiles;
       do { tiles = U.shuffle(target); } while (new Set(target).size > 1 && tiles.join('') === target.join(''));
-      if (g >= 3) for (let x = 0; x < 2; x++) tiles.splice(U.rand(0, tiles.length), 0, U.pick([...'abcdefghijklmnopqrstuvwxyz']));
+      if (ctx(g).level >= 3) for (let x = 0; x < 2; x++) tiles.splice(U.rand(0, tiles.length), 0, U.pick([...'abcdefghijklmnopqrstuvwxyz']));
       const filled = new Array(target.length).fill(null); // chỉ số ô chữ đang nằm ở mỗi vị trí
       let wrong = 0, locked = false;
 
@@ -297,5 +303,5 @@ const TiengAnh = (() => {
     return null;
   }
 
-  return { list, topicScreen, run, topicStars, MODES, modeText };
+  return { list, topicScreen, run, topicStars, modesFor, pic, MODES, modeText };
 })();

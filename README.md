@@ -1,6 +1,6 @@
 # Bé Vui Học
 
-Chương trình học có hình minh hoạ cho học sinh lớp 1–5, gồm ba môn: Tập viết, Toán và Tiếng Anh. Chạy trong trình duyệt, không cần cài đặt. Tập viết cần bàn phím; Toán và Tiếng Anh dùng được bằng chuột hoặc chạm màn hình.
+Chương trình học có hình minh hoạ cho học sinh lớp 1–5, gồm ba môn: Tập viết, Toán và Tiếng Anh. Phần **Bài học cô Lan** ôn lại bài tiếng Anh trên lớp của cô Phương Lan cho từng học sinh. Chạy trong trình duyệt, không cần cài đặt. Tập viết cần bàn phím; Toán và Tiếng Anh dùng được bằng chuột hoặc chạm màn hình.
 
 ## Chạy chương trình
 
@@ -44,6 +44,26 @@ Bản trên mạng: https://phamchiloc.github.io/be-vui-hoc/ (tự cập nhật 
 
 Với chủ đề mẫu câu (Greetings, Questions, Conversations), trò chọn đáp án hỏi nghĩa tiếng Việt và không có Ghép chữ.
 
+## Bài học cô Lan
+
+Thẻ **Bài học cô Lan** ở trang chủ tổng hợp các báo cáo học tập hằng tuần của cô Phương Lan (tuần 2, 3, 5 và 6). Mỗi học sinh có trang riêng và số sao riêng:
+
+| Học sinh | Nhóm | Nội dung |
+|----------|------|----------|
+| Bean, Bon | Nhóm 1 · 7–8 tuổi | Tuần 2: Is it the chair? · Tuần 3: Parts of face · Tuần 5: Parts of body and feelings · Tuần 6: Family, animals and appearance |
+| King | Nhóm 2 · 10 tuổi | Tuần 2: ôn Unit 3, học Unit 4 · Tuần 3: Unit 5 Things we can do · Tuần 5: Unit 6 Our school facilities · Tuần 6: ôn Unit 6, học Unit 7 |
+
+Trang của mỗi bé có:
+
+- **Thẻ từng tuần.** Bấm vào để xem báo cáo của cô: chủ đề, từ vựng mới, mẫu câu, hoạt động trên lớp, bài tập về nhà. Bấm vào từ vựng tiếng Anh trong báo cáo để nghe đọc.
+- **Luyện tập trong tuần.** Từ vựng và mẫu câu dùng 4 trò của môn Tiếng Anh. Thêm một trò 🎯 luyện đúng mẫu câu của tuần, ví dụ nhìn hình trả lời *Yes, it is / No, it isn't*, chọn *This is my… / These are my…*, chọn vị trí *on / in / under / by*.
+- **Ôn tập tổng hợp.** Gộp từ vựng của tất cả các tuần vào một bài.
+- **Bảng tổng hợp các tuần.** Mỗi tuần một dòng gồm chủ đề, từ vựng và bài tập về nhà, để phụ huynh xem nhanh.
+
+Ghép chữ của Nhóm 2 có thêm chữ cái gây nhiễu như từ lớp 3 trở lên. Nhóm 1 thì không.
+
+Báo cáo tuần 2 của King chỉ ghi "food and drink topics". Bài *Food and drinks* gồm 10 từ đồ ăn, thức uống thông dụng do chương trình tự chọn, không phải danh sách của cô.
+
 ## Tiến độ
 
 Số sao được lưu trong trình duyệt (`localStorage`). Mỗi trình duyệt, mỗi máy lưu riêng. Xoá dữ liệu duyệt web sẽ mất số sao.
@@ -67,6 +87,12 @@ Thêm một đoạn văn cho lớp 2, trong `js/data/doanvan-data.js`:
 
 Viết dấu thanh theo kiểu cũ (`hòa`, `thủy`) cho giống bộ gõ có sẵn. Ca dao, thơ thì xuống dòng bằng `\n`.
 
+Thêm một tuần cho Bài học cô Lan, trong `js/data/colan-data.js`: chép một tuần có sẵn trong mảng `weeks` của nhóm (`nhom1` hoặc `nhom2`), đổi `id` (ví dụ `tuan6`), `n`, `date`, rồi sửa `report` và `topics`. Mục `drill` chỉ dùng được khi `js/colan.js` có hàm cùng tên trong `DRILLS`. Tuần mới chưa có hàm thì xoá dòng `drill`. Thêm học sinh vào mảng `students`, ví dụ:
+
+```js
+{ id: 'mia', name: 'Mia', icon: '🐱', color: '#12b886', group: 'nhom1' },
+```
+
 Trong một chủ đề Tiếng Anh, mỗi từ cần một hình khác nhau, vì trò Nghe và chọn dùng hình làm đáp án. Dạng bài Toán được sinh bằng code trong `js/toan.js`. Mỗi dạng là một object có hàm `gen()` trả về câu hỏi.
 
 ## Cấu trúc thư mục
@@ -79,9 +105,11 @@ js/quiz.js               Bộ chạy trắc nghiệm dùng chung
 js/chepvan.js            Môn Tập viết: bộ gõ Telex, gợi ý phím, chấm điểm
 js/toan.js               Môn Toán: sinh câu hỏi và hình minh hoạ
 js/tienganh.js           Môn Tiếng Anh: thẻ từ, trắc nghiệm, ghép chữ
+js/colan.js              Bài học cô Lan: trang học sinh, báo cáo tuần, trò luyện mẫu câu
 js/app.js                Điều hướng giữa các màn hình
 js/data/doanvan-data.js  Đoạn văn cho Tập viết
 js/data/tienganh-data.js Dữ liệu Tiếng Anh
+js/data/colan-data.js    Báo cáo tuần của cô Lan, từ vựng, mẫu câu, hình vẽ SVG
 ```
 
 ## Xử lý sự cố

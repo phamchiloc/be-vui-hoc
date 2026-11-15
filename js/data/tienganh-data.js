@@ -1,6 +1,7 @@
 /* Dữ liệu Tiếng Anh theo lớp.
    Mỗi chủ đề: { id, name, vi, icon, items, phrases? }.
-   Mỗi mục: en, vi, img (emoji) — hoặc color (mã màu) / badge (chữ trên tờ lịch) thay cho img.
+   Mỗi mục: en, vi, img (emoji) — hoặc color (mã màu) / badge (chữ trên tờ lịch) / svg (hình vẽ) thay cho img.
+   say (không bắt buộc): cách đọc khi khác chữ viết, ví dụ { en: 'IT', say: 'I.T.' }.
    phrases: true khi mục là câu, khi đó bỏ trò Ghép chữ và trắc nghiệm hỏi nghĩa tiếng Việt. */
 const TA_DATA = (() => {
   const w = (en, vi, img, extra) => Object.assign({ en, vi, img }, extra);
