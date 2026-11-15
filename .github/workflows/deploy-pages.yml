@@ -26,10 +26,9 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
-      - name: Chuẩn bị thư mục trang web
-        run: |
-          mkdir -p _site
-          cp -r index.html css js _site/
+      # Gộp CSS và JS vào một file index.html, để mỗi lần cập nhật trình duyệt không trộn file cũ với file mới
+      - name: Gộp trang web thành một file
+        run: node tools/build.js
 
       - uses: actions/upload-pages-artifact@v3
         with:

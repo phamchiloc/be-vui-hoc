@@ -125,11 +125,23 @@
     cleanup = TiengAnh.run(frame([...base, topicCrumb, [modeName]]), g, topic, mode.id, () => go(['lop', g, 'tienganh', topic.id]));
   }
 
+  /* Nếu có lỗi thì báo và cho tải lại, thay vì để màn hình trống. */
+  function safeRender() {
+    try {
+      render();
+    } catch (e) {
+      console.error(e);
+      app.innerHTML = `<div class="crash"><div class="big">😵</div>
+        <p>Trang chưa tải xong bản mới. Bấm nút dưới đây (hoặc <b>Ctrl + F5</b>) để tải lại nhé!</p>
+        <button class="btn" onclick="location.reload()">🔄 Tải lại trang</button></div>`;
+    }
+  }
+
   const paintSound = () => { btnSound.textContent = U.get('sound', true) ? '🔊' : '🔇'; };
   btnSound.onclick = () => { U.set('sound', !U.get('sound', true)); paintSound(); };
   btnBack.onclick = up;
   U.dropStars((k) => k.startsWith('tv/') && !k.includes('/chepvan/')); // sao của phần tô chữ cũ đã bỏ
-  window.addEventListener('hashchange', render);
+  window.addEventListener('hashchange', safeRender);
   paintSound();
-  render();
+  safeRender();
 })();
