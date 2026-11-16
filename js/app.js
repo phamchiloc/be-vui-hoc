@@ -4,6 +4,8 @@
   const app = document.getElementById('app');
   const btnBack = document.getElementById('btnBack');
   const btnSound = document.getElementById('btnSound');
+  const btnSpeed = document.getElementById('btnSpeed');
+  const speedPanel = document.getElementById('speedPanel');
 
   const GRADES = [
     { n: 1, icon: '🐣', color: '#ff6b6b' },
@@ -146,10 +148,43 @@
   }
 
   const paintSound = () => { btnSound.textContent = U.get('sound', true) ? '🔊' : '🔇'; };
+
+  /* Bảng chọn tốc độ giọng đọc. Chọn một mức thì đọc thử ngay; Toán và Tập viết đọc thử bằng tiếng Việt. */
+  const fmtSpeed = (v) => `${String(v).replace('.', ',')}x`;
+  function trySpeed() {
+    if (/^#\/lop\/\d\/(toan|tapviet)/.test(location.hash)) U.speak('Xin chào các bạn nhỏ. Hôm nay mình cùng học nhé!', 'vi');
+    else U.speak('Hello! How are you today?', 'en');
+  }
+  function paintSpeed() {
+    const cur = U.speed();
+    btnSpeed.querySelector('span').textContent = fmtSpeed(cur);
+    speedPanel.querySelectorAll('.sp-opt').forEach((b) => b.classList.toggle('on', +b.dataset.v === cur));
+  }
+  function showSpeed(open) {
+    speedPanel.hidden = !open;
+    btnSpeed.setAttribute('aria-expanded', String(open));
+  }
+  speedPanel.innerHTML = `
+    <div class="sp-title">🗣️ Tốc độ giọng đọc</div>
+    <div class="sp-opts">${U.SPEEDS.map((s) => `
+      <button class="sp-opt" data-v="${s.v}"><span class="sp-ic">${s.icon}</span><b>${s.name}</b><small>${fmtSpeed(s.v)}</small></button>`).join('')}
+    </div>
+    <button class="btn orange sp-try">🔊 Nghe thử</button>`;
+  speedPanel.querySelectorAll('.sp-opt').forEach((b) => {
+    b.onclick = () => { U.set('speed', +b.dataset.v); paintSpeed(); trySpeed(); };
+  });
+  speedPanel.querySelector('.sp-try').onclick = trySpeed;
+  btnSpeed.onclick = () => showSpeed(speedPanel.hidden);
+  document.addEventListener('click', (e) => {
+    if (!speedPanel.hidden && !speedPanel.contains(e.target) && !btnSpeed.contains(e.target)) showSpeed(false);
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') showSpeed(false); });
+  window.addEventListener('hashchange', () => showSpeed(false));
   btnSound.onclick = () => { U.set('sound', !U.get('sound', true)); paintSound(); };
   btnBack.onclick = up;
   U.dropStars((k) => k.startsWith('tv/') && !k.includes('/chepvan/')); // sao của phần tô chữ cũ đã bỏ
   window.addEventListener('hashchange', safeRender);
   paintSound();
+  paintSpeed();
   safeRender();
 })();

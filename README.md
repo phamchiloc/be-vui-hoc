@@ -24,6 +24,8 @@ Bản trên mạng: https://phamchiloc.github.io/be-vui-hoc/ (tự cập nhật 
 
 ## Cách học từng môn
 
+Nút **🗣️ 1x** trên thanh trên cùng chỉnh tốc độ giọng đọc cho mọi môn, từ 0,5x (rất chậm) đến 1,5x (rất nhanh). Bấm một mức để nghe thử ngay. Mức đã chọn được lưu trong trình duyệt, lần sau mở lại vẫn giữ.
+
 **Tập viết.** Bé đọc đoạn văn rồi gõ lại bằng bàn phím vào ô bên dưới. Bấm môn Tập viết là vào thẳng bài đầu tiên, các bài sau chọn ở cuối trang.
 
 - Chương trình có sẵn bộ gõ Telex, máy không cần cài Unikey hay EVKey. Máy đã bật Unikey/EVKey thì tắt mục **Bộ gõ Telex có sẵn**.
@@ -115,5 +117,6 @@ js/data/colan-data.js    Báo cáo tuần của cô Lan, từ vựng, mẫu câu
 ## Xử lý sự cố
 
 - **Không nghe thấy giọng đọc tiếng Việt**: mở chương trình bằng Microsoft Edge.
+- **Giọng đọc quá nhanh hoặc quá chậm**: bấm nút 🗣️ trên thanh trên cùng rồi chọn mức khác.
 - **Không có tiếng hiệu ứng (đúng/sai)**: kiểm tra nút 🔊 ở góc trên bên phải. Nút này chỉ bật/tắt tiếng hiệu ứng, không tắt giọng đọc.
 - **Một vài hình hiện thành ô vuông**: máy dùng bộ emoji cũ. Cập nhật Windows hoặc dùng trình duyệt mới hơn.

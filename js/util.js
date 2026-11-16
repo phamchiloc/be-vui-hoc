@@ -100,6 +100,16 @@ const U = (() => {
     return list.sort((a, b) => score(b) - score(a))[0];
   }
 
+  /* Tốc độ đọc người dùng chọn ở nút 🗣️, nhân với tốc độ gốc của từng câu (tiếng Anh 0.85, tiếng Việt 1). */
+  const SPEEDS = [
+    { v: 0.5, icon: '🐌', name: 'Rất chậm' },
+    { v: 0.75, icon: '🐢', name: 'Chậm' },
+    { v: 1, icon: '🙂', name: 'Vừa' },
+    { v: 1.25, icon: '🐇', name: 'Nhanh' },
+    { v: 1.5, icon: '🚀', name: 'Rất nhanh' },
+  ];
+  const speed = () => get('speed', 1);
+
   let warnedVi = false;
   function speak(text, lang = 'en', rate) {
     if (!hasTTS) { toast('Trình duyệt này không đọc được thành tiếng.'); return; }
@@ -115,7 +125,7 @@ const U = (() => {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-US'; }
-    u.rate = rate || (lang === 'en' ? 0.85 : 1);
+    u.rate = Math.min(10, Math.max(0.1, (rate || (lang === 'en' ? 0.85 : 1)) * speed()));
     speechSynthesis.speak(u);
   }
   const stopSpeak = () => { if (hasTTS) speechSynthesis.cancel(); };
@@ -172,6 +182,6 @@ const U = (() => {
   return {
     rand, pick, shuffle, esc, el, fmt,
     get, set, getStars, setStars, dropStars, totalStars, updateStarTotal, starsHtml,
-    sound, speak, stopSpeak, toast, confetti,
+    sound, speak, stopSpeak, SPEEDS, speed, toast, confetti,
   };
 })();
