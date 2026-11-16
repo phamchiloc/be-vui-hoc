@@ -1,5 +1,6 @@
 /* Điều hướng giữa các màn hình theo địa chỉ dạng #/lop/<lớp>/<môn>/<bài>/...
-   Bài học cô Lan có địa chỉ riêng #/colan/<bé>/<tuần>/..., xem js/colan.js. */
+   Bài học cô Lan có địa chỉ riêng #/colan/<bé>/<tuần>/..., xem js/colan.js.
+   Quà của bé: #/qua, xem js/qua.js. Sao và quà tính riêng cho bé đang học (nút bé trên thanh trên cùng). */
 (() => {
   const app = document.getElementById('app');
   const btnBack = document.getElementById('btnBack');
@@ -31,6 +32,7 @@
     const p = parse();
     if (!p.length) return;
     if (p[2] === 'tapviet') { go(['lop', p[1]]); return; }
+    if (p[0] === 'qua' && p[1]) { go(['qua']); return; }
     p.pop();
     if (p.length === 1 && p[0] === 'lop') p.length = 0;
     go(p);
@@ -51,18 +53,20 @@
         <h1>Bé Vui Học</h1>
         <p>Tập viết · Toán · Tiếng Anh — chọn lớp của bé để bắt đầu nhé!</p>
       </section>
+      <div class="kid-slot"></div>
       <div class="grid grades">${GRADES.map((g) => `
         <a class="card" href="#/lop/${g.n}" style="--c:${g.color}">
           <div class="big">${g.icon}</div>
           <div class="title">Lớp ${g.n}</div>
           <div class="sub">⭐ ${gradeStars(g.n)} sao</div>
         </a>`).join('')}
-        <a class="card colan" href="#/colan" style="--c:#e64980">
+        <a class="card colan" href="#/colan${U.who() ? `/${U.who()}` : ''}" style="--c:#e64980">
           <div class="big">👩‍🏫</div>
           <div class="title">Bài học cô Lan</div>
           <div class="sub">${COLAN_DATA.students.map((s) => s.name).join(' · ')}</div>
           <div class="sub">⭐ ${U.totalStars('colan/')} sao</div>
         </a></div>`;
+    Qua.mountBanner(app.querySelector('.kid-slot'));
   }
 
   function gradeScreen(g) {
@@ -90,11 +94,15 @@
     if (cleanup) { try { cleanup(); } catch (e) { /* bỏ qua */ } cleanup = null; }
     U.stopSpeak();
     window.scrollTo(0, 0);
-    U.updateStarTotal();
 
     const p = parse();
+    // Bài cô Lan của bé nào thì tính sao cho bé đó
+    if (p[0] === 'colan' && p[1] && Qua.kid(p[1])) Qua.setKid(p[1], true);
+    Qua.paint();
+    if (!Qua.current()) Qua.pickKid(true);
     btnBack.style.visibility = p.length ? 'visible' : 'hidden';
     if (p[0] === 'colan') { cleanup = CoLan.render(p.slice(1), { frame, go }) || null; return; }
+    if (p[0] === 'qua') { Qua.render(p.slice(1), { frame, go }); return; }
     const g = +p[1];
     if (p[0] !== 'lop' || !GRADES.some((x) => x.n === g)) return home();
     if (!p[2]) return gradeScreen(g);
@@ -184,6 +192,14 @@
   btnBack.onclick = up;
   U.dropStars((k) => k.startsWith('tv/') && !k.includes('/chepvan/')); // sao của phần tô chữ cũ đã bỏ
   window.addEventListener('hashchange', safeRender);
+  /* Đổi bé: đang ở bài cô Lan của bé khác thì sang trang cô Lan của bé mới, còn lại vẽ lại trang hiện tại. */
+  Qua.init({
+    onKid: (id) => {
+      const p = parse();
+      if (p[0] === 'colan' && p[1] && p[1] !== id) go(['colan', id]);
+      else safeRender();
+    },
+  });
   paintSound();
   paintSpeed();
   safeRender();

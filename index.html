@@ -12,9 +12,10 @@
 <body>
   <header class="topbar">
     <button id="btnBack" class="icon-btn" title="Quay lại">⬅️</button>
-    <a href="#/" class="brand">🎒 Bé Vui Học</a>
+    <a href="#/" class="brand">🎒 <span class="brand-text">Bé Vui Học</span></a>
     <div class="spacer"></div>
-    <div class="stars-total" title="Tổng số sao bé đã đạt">⭐ <span id="starTotal">0</span></div>
+    <button id="btnKid" class="kid-btn" title="Bé đang học – bấm để đổi bé"><span class="kid-ic">👤</span><span class="kid-name">Chọn bé</span> ⭐ <span id="starTotal">0</span></button>
+    <a id="btnGift" href="#/qua" class="icon-btn gift-btn" title="Quà của bé">🎁<i class="badge" hidden>0</i></a>
     <button id="btnSpeed" class="speed-btn" title="Tốc độ giọng đọc" aria-expanded="false" aria-controls="speedPanel">🗣️ <span>1x</span></button>
     <button id="btnSound" class="icon-btn" title="Bật/tắt âm thanh hiệu ứng">🔊</button>
     <div id="speedPanel" class="speed-panel" hidden></div>
@@ -29,6 +30,7 @@
   <script src="js/data/tienganh-data.js"></script>
   <script src="js/data/doanvan-data.js"></script>
   <script src="js/data/colan-data.js"></script>
+  <script src="js/qua.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/chepvan.js"></script>
   <script src="js/toan.js"></script>

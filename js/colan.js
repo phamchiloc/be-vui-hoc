@@ -279,7 +279,7 @@ const CoLan = (() => {
           <div class="big">${st.icon}</div>
           <div class="title">${esc(st.name)}</div>
           <div class="sub">${g.name} · ${g.age}</div>
-          <div class="sub">⭐ ${U.totalStars(`colan/${st.id}/`)} sao</div>
+          <div class="sub">⭐ ${U.totalStars(`colan/${st.id}/`, st.id)} sao</div>
         </a>`;
       }).join('')}</div>`;
   }

@@ -1,6 +1,6 @@
 # Bé Vui Học
 
-Chương trình học có hình minh hoạ cho học sinh lớp 1–5, gồm ba môn: Tập viết, Toán và Tiếng Anh. Phần **Bài học cô Lan** ôn lại bài tiếng Anh trên lớp của cô Phương Lan cho từng học sinh. Chạy trong trình duyệt, không cần cài đặt. Tập viết cần bàn phím; Toán và Tiếng Anh dùng được bằng chuột hoặc chạm màn hình.
+Chương trình học có hình minh hoạ cho học sinh lớp 1–5, gồm ba môn: Tập viết, Toán và Tiếng Anh. Phần **Bài học cô Lan** ôn lại bài tiếng Anh trên lớp của cô Phương Lan cho từng học sinh. Mỗi bé có sao riêng, đủ sao thì được mở hộp quà. Chạy trong trình duyệt, không cần cài đặt. Tập viết cần bàn phím; Toán và Tiếng Anh dùng được bằng chuột hoặc chạm màn hình.
 
 ## Chạy chương trình
 
@@ -66,9 +66,23 @@ Ghép chữ của Nhóm 2 có thêm chữ cái gây nhiễu như từ lớp 3 tr
 
 Báo cáo tuần 2 của King chỉ ghi "food and drink topics". Bài *Food and drinks* gồm 10 từ đồ ăn, thức uống thông dụng do chương trình tự chọn, không phải danh sách của cô.
 
-## Tiến độ
+## Sao và quà của từng bé
 
-Số sao được lưu trong trình duyệt (`localStorage`). Mỗi trình duyệt, mỗi máy lưu riêng. Xoá dữ liệu duyệt web sẽ mất số sao.
+Lần đầu mở trang, bé chọn tên mình trong bảng **Ai đang học?** (Bean, Bon, King). Nút có hình bé và số ⭐ trên thanh trên cùng cho biết bé nào đang học. Bấm nút đó để đổi bé. Mỗi bé có sao riêng ở mọi môn. Mở bài cô Lan của bé nào thì chương trình tự đổi sang bé đó.
+
+Mỗi bài chỉ giữ số sao cao nhất bé từng đạt, nên làm lại bài cũ không được thêm sao. Muốn thêm sao thì phải học bài mới hoặc làm tốt hơn.
+
+**Hộp hình dán.** Bé tự được một hộp quà ở các mốc 5, 15, 30, 50, 75, 100, 130, 160, 200 sao, sau đó cứ thêm 50 sao lại có một hộp. Khi đạt mốc, một thông báo 🎁 hiện dưới thanh trên cùng, và nút 🎁 hiện số hộp chờ mở. Mở hộp được một hình dán mới trong bộ 46 hình. Bấm vào hình đã có để nghe đọc tên tiếng Anh. Đủ 46 hình thì các hộp sau cho huy chương 🏅.
+
+**Quà của bố mẹ.** Bố mẹ đặt quà thật cho từng bé:
+
+1. Bấm nút 🎁, kéo xuống cuối trang, bấm **👪 Bố mẹ đặt quà**.
+2. Trả lời phép tính. Phép tính chỉ để bé không vô tình sửa quà, không phải mật khẩu.
+3. Chọn tên bé, ghi số sao cần đạt và phần quà (ví dụ `50` và `Đi ăn kem`), bấm **➕ Thêm quà**.
+
+Bé thấy quà trong trang Quà và ở trang chủ, kèm số sao còn thiếu. Đủ sao thì bé mở hộp quà vàng để xem quà. Trao quà xong, bố mẹ đánh dấu **Đã trao** trong trang Bố mẹ đặt quà. Số sao và tên quà sửa được bất cứ lúc nào.
+
+Sao và quà lưu trong trình duyệt (`localStorage`). Mỗi trình duyệt, mỗi máy lưu riêng. Xoá dữ liệu duyệt web sẽ mất sao và quà. Sao làm trước khi có phần chọn bé được tính cho bé được chọn đầu tiên trên máy đó; riêng sao bài cô Lan được tính cho đúng bé.
 
 ## Thêm nội dung
 
@@ -89,7 +103,7 @@ Thêm một đoạn văn cho lớp 2, trong `js/data/doanvan-data.js`:
 
 Viết dấu thanh theo kiểu cũ (`hòa`, `thủy`) cho giống bộ gõ có sẵn. Ca dao, thơ thì xuống dòng bằng `\n`.
 
-Thêm một tuần cho Bài học cô Lan, trong `js/data/colan-data.js`: chép một tuần có sẵn trong mảng `weeks` của nhóm (`nhom1` hoặc `nhom2`), đổi `id` (ví dụ `tuan6`), `n`, `date`, rồi sửa `report` và `topics`. Mục `drill` chỉ dùng được khi `js/colan.js` có hàm cùng tên trong `DRILLS`. Tuần mới chưa có hàm thì xoá dòng `drill`. Thêm học sinh vào mảng `students`, ví dụ:
+Thêm một tuần cho Bài học cô Lan, trong `js/data/colan-data.js`: chép một tuần có sẵn trong mảng `weeks` của nhóm (`nhom1` hoặc `nhom2`), đổi `id` (ví dụ `tuan6`), `n`, `date`, rồi sửa `report` và `topics`. Mục `drill` chỉ dùng được khi `js/colan.js` có hàm cùng tên trong `DRILLS`. Tuần mới chưa có hàm thì xoá dòng `drill`. Thêm học sinh vào mảng `students` (học sinh mới cũng hiện trong bảng **Ai đang học?**), ví dụ:
 
 ```js
 { id: 'mia', name: 'Mia', icon: '🐱', color: '#12b886', group: 'nhom1' },
@@ -102,12 +116,13 @@ Trong một chủ đề Tiếng Anh, mỗi từ cần một hình khác nhau, v�
 ```text
 index.html               Trang chính
 css/style.css            Giao diện
-js/util.js               Tiện ích: lưu sao, âm thanh, giọng đọc, pháo giấy
+js/util.js               Tiện ích: lưu sao của từng bé, âm thanh, giọng đọc, pháo giấy
 js/quiz.js               Bộ chạy trắc nghiệm dùng chung
 js/chepvan.js            Môn Tập viết: bộ gõ Telex, gợi ý phím, chấm điểm
 js/toan.js               Môn Toán: sinh câu hỏi và hình minh hoạ
 js/tienganh.js           Môn Tiếng Anh: thẻ từ, trắc nghiệm, ghép chữ
 js/colan.js              Bài học cô Lan: trang học sinh, báo cáo tuần, trò luyện mẫu câu
+js/qua.js                Chọn bé đang học, hộp quà, hình dán, quà của bố mẹ
 js/app.js                Điều hướng giữa các màn hình
 js/data/doanvan-data.js  Đoạn văn cho Tập viết
 js/data/tienganh-data.js Dữ liệu Tiếng Anh
@@ -118,5 +133,6 @@ js/data/colan-data.js    Báo cáo tuần của cô Lan, từ vựng, mẫu câu
 
 - **Không nghe thấy giọng đọc tiếng Việt**: mở chương trình bằng Microsoft Edge.
 - **Giọng đọc quá nhanh hoặc quá chậm**: bấm nút 🗣️ trên thanh trên cùng rồi chọn mức khác.
+- **Sao hiện sai bé**: xem bé đang chọn trên thanh trên cùng, bấm vào để đổi. Sao đã đạt không chuyển được từ bé này sang bé khác.
 - **Không có tiếng hiệu ứng (đúng/sai)**: kiểm tra nút 🔊 ở góc trên bên phải. Nút này chỉ bật/tắt tiếng hiệu ứng, không tắt giọng đọc.
 - **Một vài hình hiện thành ô vuông**: máy dùng bộ emoji cũ. Cập nhật Windows hoặc dùng trình duyệt mới hơn.

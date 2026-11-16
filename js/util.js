@@ -35,22 +35,65 @@ const U = (() => {
   const get = (k, d) => (k in store ? store[k] : d);
   const set = (k, v) => { store[k] = v; save(); };
 
-  /* Sao: lưu số sao cao nhất của từng bài, khoá dạng "toan/2/congnho". */
-  const getStars = (id) => (store.stars || {})[id] || 0;
+  /* Sao: lưu số sao cao nhất của từng bài, khoá dạng "toan/2/congnho".
+     Mỗi bé (chọn ở nút trên thanh trên cùng) có bảng sao riêng: store.kids[<bé>].stars.
+     Bảng sao chung của bản cũ (store.stars) được chuyển cho bé chọn đầu tiên trên máy này;
+     riêng sao bài cô Lan (khoá colan/<bé>/...) được chuyển ngay cho đúng bé. */
+  let who = get('who', null);
+  function starMap(k = who) {
+    if (!k) return (store.stars = store.stars || {});
+    store.kids = store.kids || {};
+    const kid = (store.kids[k] = store.kids[k] || {});
+    return (kid.stars = kid.stars || {});
+  }
+  function moveOldStars(test, owner) {
+    const old = store.stars;
+    if (!old) return 0;
+    let n = 0;
+    Object.keys(old).filter(test).forEach((id) => {
+      const m = starMap(owner(id));
+      m[id] = Math.max(m[id] || 0, old[id]);
+      n += old[id];
+      delete old[id];
+    });
+    if (!Object.keys(old).length) delete store.stars;
+    return n;
+  }
+  const colanOwner = (id) => (/^colan\/([^/]+)\//.exec(id) || [])[1];
+  if (store.stars) { moveOldStars(colanOwner, colanOwner); save(); }
+
+  /* Chọn bé đang học. Trả về số sao cũ vừa chuyển cho bé (chỉ khác 0 ở lần chọn đầu tiên). */
+  function setWho(k) {
+    const moved = moveOldStars(() => true, () => k);
+    who = k;
+    set('who', k);
+    updateStarTotal();
+    return moved;
+  }
+
+  /* Hàm được gọi mỗi khi bé đạt thêm sao (phần Quà dùng để báo có hộp quà mới). */
+  const starListeners = [];
+  const onStars = (fn) => starListeners.push(fn);
+
+  const getStars = (id) => starMap()[id] || 0;
   function setStars(id, n) {
-    store.stars = store.stars || {};
-    if (n > (store.stars[id] || 0)) { store.stars[id] = n; save(); }
+    const m = starMap();
+    if (n > (m[id] || 0)) {
+      m[id] = n;
+      save();
+      starListeners.forEach((fn) => { try { fn(); } catch (e) { console.error(e); } });
+    }
     updateStarTotal();
   }
-  /* Xoá sao của những bài không còn trong chương trình. */
+  /* Xoá sao của những bài không còn trong chương trình (ở mọi bé). */
   function dropStars(test) {
-    const s = store.stars || {};
-    const keys = Object.keys(s).filter(test);
-    keys.forEach((k) => delete s[k]);
-    if (keys.length) save();
+    const maps = [store.stars, ...Object.values(store.kids || {}).map((kid) => kid.stars)].filter(Boolean);
+    let n = 0;
+    maps.forEach((m) => Object.keys(m).filter(test).forEach((k) => { delete m[k]; n++; }));
+    if (n) save();
   }
-  const totalStars = (prefix = '') =>
-    Object.entries(store.stars || {}).filter(([k]) => k.startsWith(prefix)).reduce((s, [, v]) => s + v, 0);
+  const totalStars = (prefix = '', k = who) =>
+    Object.entries(starMap(k)).filter(([id]) => id.startsWith(prefix)).reduce((s, [, v]) => s + v, 0);
   function updateStarTotal() {
     const e = document.getElementById('starTotal');
     if (e) e.textContent = totalStars();
@@ -181,7 +224,7 @@ const U = (() => {
 
   return {
     rand, pick, shuffle, esc, el, fmt,
-    get, set, getStars, setStars, dropStars, totalStars, updateStarTotal, starsHtml,
+    get, set, who: () => who, setWho, onStars, getStars, setStars, dropStars, totalStars, updateStarTotal, starsHtml,
     sound, speak, stopSpeak, SPEEDS, speed, toast, confetti,
   };
 })();
